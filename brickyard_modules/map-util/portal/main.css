@@ -24,6 +24,15 @@ legend {
 	margin: 10px;
 }
 
+#brickyard-app .github-fork-ribbon:before {
+	background-color: #5cb85c;
+	height: 2.3em;
+}
+
+#brickyard-app .github-fork-ribbon:after {
+	height: 2.1em;
+}
+
 #operations {
 	display: none;
 	padding: 10px;
