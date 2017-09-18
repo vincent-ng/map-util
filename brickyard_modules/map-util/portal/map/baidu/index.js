@@ -1,6 +1,5 @@
 const _ = require('lodash')
 const $ = require('jquery')
-const mapUrl = require('./load')
 
 // copy from qiji110
 function radians(n) {
@@ -118,6 +117,10 @@ function initMap(elemID) {
 }
 
 module.exports.init = mapElementId => new Promise((resolve) => {
+	if (document.location.protocol === 'https:') {
+		window.HOST_TYPE = '2'
+	}
+
+	const mapUrl = `//api.map.baidu.com/getscript?v=2.0&ak=IP0OO8wiWGlANXqlEoDOqwHW&services=&t=${Date.now()}`
 	$.getScript(mapUrl, () => resolve(initMap(mapElementId)))
 })
-
