@@ -15,14 +15,14 @@ function getMapPoint(p) {
 	if (!p) {
 		return null
 	}
-	const clng = normalize(p.clng || p.clon || p.clongitude)
-	const clat = normalize(p.clat || p.clatitude)
+	const clng = normalize(p.clng || p.clon || p.clongitude || p['偏转经度'])
+	const clat = normalize(p.clat || p.clatitude || p['偏转纬度'])
 	if (clng && clat) {
 		// console.log('bd09', clng, clat)
 		return new BMap.Point(clng, clat)
 	}
-	const lng = normalize(p.lng || p.lon || p.longitude || p['纬度'])
-	const lat = normalize(p.lat || p.latitude || p['经度'])
+	const lng = normalize(p.lng || p.lon || p.longitude || p['经度'])
+	const lat = normalize(p.lat || p.latitude || p['纬度'])
 	if (lng && lat) {
 		let coord = coordtransform.wgs84togcj02(lng, lat)
 		coord = coordtransform.gcj02tobd09(coord[0], coord[1])
