@@ -11,18 +11,27 @@ function normalize(v) {
 	return (n >= -180 && n <= 180) ? n : n / 3600000
 }
 
+function pick(obj, ...fields) {
+	for (const k of _.keys(obj)) {
+		if (fields.includes(k.toLowerCase())) {
+			return obj[k]
+		}
+	}
+	return null
+}
+
 function getMapPoint(p) {
 	if (!p) {
 		return null
 	}
-	const clng = normalize(p.clng || p.clon || p.clongitude || p['偏转经度'])
-	const clat = normalize(p.clat || p.clatitude || p['偏转纬度'])
+	const clng = normalize(pick(p, 'clng', 'clon', 'clongitude', '偏转经度'))
+	const clat = normalize(pick(p, 'clat', 'clatitude', '偏转纬度'))
 	if (clng && clat) {
 		// console.log('bd09', clng, clat)
 		return new BMap.Point(clng, clat)
 	}
-	const lng = normalize(p.lng || p.lon || p.longitude || p['经度'])
-	const lat = normalize(p.lat || p.latitude || p['纬度'])
+	const lng = normalize(pick(p, 'lng', 'lon', 'longitude', '经度'))
+	const lat = normalize(pick(p, 'lat', 'latitude', '纬度'))
 	if (lng && lat) {
 		let coord = coordtransform.wgs84togcj02(lng, lat)
 		coord = coordtransform.gcj02tobd09(coord[0], coord[1])
