@@ -12,7 +12,7 @@ handler.onRead = () => {
 function to_json(workbook) {
 	const result = {}
 	workbook.SheetNames.forEach((sheetName) => {
-		const roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName])
+		const roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName], { dateNF: 'YYYY-MM-DD HH:mm:ss' })
 		if (roa.length > 0) {
 			result[sheetName] = roa
 		}
@@ -33,6 +33,8 @@ function processFile(files, cb) {
 		const data = event.target.result
 		const wb = XLSX.read(data, {
 			type: 'binary',
+			cellText: false,
+			cellDates: true,
 		})
 		spinner.hideSpinner()
 		cb(process_workbook(wb))
