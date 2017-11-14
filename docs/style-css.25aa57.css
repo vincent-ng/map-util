@@ -6869,4 +6869,21 @@ button.close {
   -ms-transform: rotate(-45deg);
   -o-transform: rotate(-45deg);
   transform: rotate(-45deg);
+}#webpack-file-drag-reader #filedrag {
+	text-align: center;
+	font-weight: bold;
+	padding: 1em 0;
+	margin: 1em 0;
+	color: #555;
+	border: 2px dashed #555;
+	border-radius: 7px;
+	cursor: default;
+}
+
+#webpack-file-drag-reader #filedrag.hover {
+	border: 3px lightgreen dashed;
+}
+
+#webpack-file-drag-reader #filedrag input[type="file"][hidden] {
+    display: none;
 }
