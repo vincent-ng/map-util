@@ -1,12 +1,8 @@
 module.exports = {
-	includes: ['webpack'],
+	includes: ['webpack-agile'],
 	modules: [
-		'framework-frontend/webpack/index-template',
-		'map-util'
+		'map-util',
 	],
 	config: {
-		'buildtask-webpack-babel': {
-			compileJS: true,
-		},
-	}
+	},
 }

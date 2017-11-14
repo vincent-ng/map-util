@@ -7,6 +7,7 @@
   "author": "brickyard-developer",
   "license": "ISC",
   "devDependencies": {
+    "@brickyard/webpack-file-drag-reader": "^0.0.4",
     "bootstrap": "^3.3.7",
     "coordtransform": "^2.1.2",
     "file-saver": "^1.3.3",
