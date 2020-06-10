@@ -1,0 +1,20 @@
+{
+  "name": "webpack-dev-server",
+  "version": "1.0.0",
+  "brickyard-module-type": "buildtask",
+  "description": "buildtask for webpack-dev-server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.4",
+    "http-proxy-middleware": "^0.17.4",
+    "morgan": "^1.8.2",
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-dev-server": "^2.7.1",
+    "webpack-hot-middleware": "^2.18.2"
+  }
+}
