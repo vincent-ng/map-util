@@ -19,7 +19,7 @@ $(async () => {
 
 	file.init('fileComponent')
 	file.onRead = (sheets) => {
-		const list = _.concat(..._.values(sheets)) // array of every point
+		const list = _.concat(..._.values(sheets)) // array of every record
 		mapManager.resetSidebar()
 		mapManager.setRenderList(list)
 		$('#getGeoLocations')
@@ -35,7 +35,9 @@ $(async () => {
 		$('#operations').show()
 		$('#infoComponent')
 			.html(
-				`total distance: ${(mapManager.totalDistance / 1000).toFixed(2)} km`,
+				`total distance: ${(mapManager.totalDistance / 1000).toFixed(
+					2,
+				)} km, active time: ${mapManager.activeHours} hours`,
 			)
 			.show()
 	}

@@ -1,5 +1,6 @@
 require('./main.css')
 const _ = require('lodash')
+const moment = require('moment')
 const html = require('html-loader!./index.html')
 const sidebarTemplate = _.template(require('html-loader!./sidebar.html'))
 const baidu = require('./baidu')
@@ -128,6 +129,7 @@ class MapManager {
 		this.renderPoints = []
 		this.lastClickSidebarPointIndex = undefined
 		this.totalDistance = 0
+		this.activeHours = 0
 	}
 
 	async init(elementId) {
@@ -153,6 +155,15 @@ class MapManager {
 				return 0
 			})
 			.reduce((prev, curr) => prev + curr, 0)
+
+		const activePoints = list
+			.filter((record) => record.category === '1')
+			.map((record) => {
+				const tempMoment = moment(record.timestamp)
+				record.formatTime = tempMoment.format('YYYY-MM-DD HH')
+				return record
+			})
+		this.activeHours = _.keys(_.groupBy(activePoints, 'formatTime')).length
 
 		const options = {
 			size: BMAP_POINT_SIZE_BIGGER,
