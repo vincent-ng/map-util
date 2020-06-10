@@ -33,5 +33,10 @@ $(async () => {
 				file.exportFile(list, `locations${Date.now()}`)
 			})
 		$('#operations').show()
+		$('#infoComponent')
+			.html(
+				`total distance: ${(mapManager.totalDistance / 1000).toFixed(2)} km`,
+			)
+			.show()
 	}
 })

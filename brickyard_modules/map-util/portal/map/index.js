@@ -138,7 +138,7 @@ class MapManager {
 
 	setRenderList(list) {
 		this.renderList = list
-		this.renderPoints = this.renderList.map((value, index) => {
+		this.renderPoints = list.map((value, index) => {
 			const point = getMapPoint(value)
 			if (point) {
 				point.index = index

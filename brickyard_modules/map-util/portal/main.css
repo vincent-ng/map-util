@@ -1,10 +1,11 @@
 body {
-	font-family: "Segoe UI", Tahoma, Helvetica, freesans, sans-serif;
+	font-family: 'Segoe UI', Tahoma, Helvetica, freesans, sans-serif;
 	color: #333;
 	background-color: #fff;
 }
 
-h1, h2 {
+h1,
+h2 {
 	font-size: 1.5em;
 	font-weight: normal;
 }
@@ -33,26 +34,35 @@ legend {
 	height: 2.1em;
 }
 
-#operations {
+#operations,
+#infoComponent {
 	display: none;
 	padding: 10px;
-    margin-bottom: 15px;
-    text-align: center;
-    border: 2px solid gray;
+	margin-bottom: 15px;
+	text-align: center;
+	border: 2px solid gray;
 }
 
 @-webkit-keyframes sk-stretchdelay {
-	0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
-	20% { -webkit-transform: scaleY(1.0) }
+	0%,
+	40%,
+	100% {
+		-webkit-transform: scaleY(0.4);
+	}
+	20% {
+		-webkit-transform: scaleY(1);
+	}
 }
 
 @keyframes sk-stretchdelay {
-	0%, 40%, 100% {
-	transform: scaleY(0.4);
-	-webkit-transform: scaleY(0.4);
+	0%,
+	40%,
+	100% {
+		transform: scaleY(0.4);
+		-webkit-transform: scaleY(0.4);
 	}
 	20% {
-		 transform: scaleY(1.0);
-		 -webkit-transform: scaleY(1.0);
+		transform: scaleY(1);
+		-webkit-transform: scaleY(1);
 	}
 }
