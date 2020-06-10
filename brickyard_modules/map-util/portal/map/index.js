@@ -130,7 +130,7 @@ class MapManager {
 		this.lastClickSidebarPointIndex = undefined
 		this.totalDistance = 0
 		this.activeHours = 0
-		this.passedDistrictCount = 0
+		this.passedDistrict = []
 	}
 
 	async init(elementId) {
@@ -157,18 +157,22 @@ class MapManager {
 			})
 			.reduce((prev, curr) => prev + curr, 0)
 
+		const group = _.groupBy(list, 'district')
+		delete group.undefined
+		this.passedDistrict = _.keys(group)
+
 		const activePoints = list
 			.filter((record) => record.category === '1')
 			.map((record) => {
 				const tempMoment = moment(record.timestamp)
-				record.formatTime = tempMoment.format('YYYY-MM-DD HH')
+				record.active_hour = tempMoment.format('YYYY-MM-DD HH')
 				return record
 			})
-		this.activeHours = _.keys(_.groupBy(activePoints, 'formatTime')).length
+		this.activeHours = _.keys(_.groupBy(activePoints, 'active_hour')).length
 
 		const options = {
-			size: BMAP_POINT_SIZE_BIGGER,
-			shape: BMAP_POINT_SHAPE_STAR,
+			size: BMAP_POINT_SIZE_SMALL,
+			shape: BMAP_POINT_SHAPE_CIRCLE,
 			color: '#d340c3',
 		}
 		const pointCollection = new BMap.PointCollection(this.renderPoints, options)
@@ -213,7 +217,7 @@ class MapManager {
 		progressBar.hideProgressBar()
 
 		const group = _.groupBy(this.renderList, 'district')
-		this.passedDistrictCount = _.keys(group).length
+		this.passedDistrict = _.keys(group)
 	}
 
 	async quickFetchGeoLocations() {
@@ -230,7 +234,6 @@ class MapManager {
 
 		for (let i = 0; i < this.renderPoints.length; i += 1) {
 			// for (let i = 0; i < 100; i += 1) {
-
 			const p = _.cloneDeep(this.renderPoints[i])
 			if (distanceSimplify(checkpoints[checkpoints.length - 1], p) > 1000) {
 				const address = await this.mapInst.getGeoLocation(p)
@@ -249,7 +252,8 @@ class MapManager {
 		setProgress(100)
 		progressBar.hideProgressBar()
 
-		this.passedDistrictCount = _.keys(_.groupBy(checkpoints, 'district')).length
+		const group = _.groupBy(checkpoints, 'district')
+		this.passedDistrict = _.keys(group)
 	}
 }
 
