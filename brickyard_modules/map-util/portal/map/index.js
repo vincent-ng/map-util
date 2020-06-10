@@ -130,6 +130,7 @@ class MapManager {
 		this.lastClickSidebarPointIndex = undefined
 		this.totalDistance = 0
 		this.activeHours = 0
+		this.passedDistrictCount = 0
 	}
 
 	async init(elementId) {
@@ -195,18 +196,60 @@ class MapManager {
 			trailing: true,
 			maxWait: 250,
 		})
+
 		for (let i = 0; i < this.renderPoints.length; i += 1) {
 			const p = this.renderPoints[i]
 			const address = await this.mapInst.getGeoLocation(p)
+			setProgress(Math.ceil((i / this.renderPoints.length) * 100))
+
 			const data = this.renderList[p.index]
-			_.assign(data, address)
+			Object.assign(data, address)
 			if (this.lastClickSidebarPointIndex === p.index) {
 				renderSidebar(data)
 			}
-			setProgress(Math.ceil((i / this.renderPoints.length) * 100))
 		}
+
 		setProgress(100)
 		progressBar.hideProgressBar()
+
+		const group = _.groupBy(this.renderList, 'district')
+		this.passedDistrictCount = _.keys(group).length
+	}
+
+	async quickFetchGeoLocations() {
+		progressBar.showProgressBar()
+		progressBar.setProgress(0)
+		const setProgress = _.debounce(progressBar.setProgress, 250, {
+			trailing: true,
+			maxWait: 250,
+		})
+
+		const firstPoint = _.cloneDeep(this.renderPoints[0])
+		const firstAddress = await this.mapInst.getGeoLocation(firstPoint)
+		const checkpoints = [Object.assign(firstPoint, firstAddress)]
+
+		for (let i = 0; i < this.renderPoints.length; i += 1) {
+			// for (let i = 0; i < 100; i += 1) {
+
+			const p = _.cloneDeep(this.renderPoints[i])
+			if (distanceSimplify(checkpoints[checkpoints.length - 1], p) > 1000) {
+				const address = await this.mapInst.getGeoLocation(p)
+				checkpoints.push(Object.assign(p, address))
+
+				const data = this.renderList[p.index]
+				Object.assign(data, address)
+				if (this.lastClickSidebarPointIndex === p.index) {
+					renderSidebar(data)
+				}
+			}
+
+			setProgress(Math.ceil((i / this.renderPoints.length) * 100))
+		}
+
+		setProgress(100)
+		progressBar.hideProgressBar()
+
+		this.passedDistrictCount = _.keys(_.groupBy(checkpoints, 'district')).length
 	}
 }
 

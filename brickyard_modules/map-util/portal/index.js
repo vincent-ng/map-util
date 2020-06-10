@@ -25,7 +25,18 @@ $(async () => {
 		$('#getGeoLocations')
 			.off('click')
 			.click(async () => {
-				mapManager.fetchGeoLocations()
+				await mapManager.fetchGeoLocations()
+				$('#infoComponent span').html(
+					`, passed ${mapManager.passedDistrictCount} districts`,
+				)
+			})
+		$('#quickGetGeoLocations')
+			.off('click')
+			.click(async () => {
+				await mapManager.quickFetchGeoLocations()
+				$('#infoComponent span').html(
+					`, passed ${mapManager.passedDistrictCount} districts`,
+				)
 			})
 		$('#exportFile')
 			.off('click')
@@ -37,7 +48,7 @@ $(async () => {
 			.html(
 				`total distance: ${(mapManager.totalDistance / 1000).toFixed(
 					2,
-				)} km, active time: ${mapManager.activeHours} hours`,
+				)} km, active time: ${mapManager.activeHours} hours<span></span>`,
 			)
 			.show()
 	}
