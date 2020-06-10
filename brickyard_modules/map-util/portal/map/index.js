@@ -8,7 +8,7 @@ const progressBar = require('../loader')
 
 function normalize(v) {
 	const n = Number(v)
-	return (n >= -180 && n <= 180) ? n : n / 3600000
+	return n >= -180 && n <= 180 ? n : n / 3600000
 }
 
 function pick(obj, ...fields) {
@@ -46,12 +46,88 @@ function renderSidebar(data) {
 	sidebar.innerHTML = sidebarTemplate({ data })
 }
 
+function toRadians(n) {
+	return (n * Math.PI) / 180
+}
+
+function distanceSimplify(start, end) {
+	// https://tech.meituan.com/2014/09/05/lucene-distance.html
+	const dx = start.lng - end.lng
+	const dy = start.lat - end.lat
+	const meanLat = (start.lat + end.lat) / 2
+	const xDistance = toRadians(dx) * 6367000 * Math.cos(toRadians(meanLat))
+	const yDistance = 6367000 * toRadians(dy)
+	return (xDistance ** 2 + yDistance ** 2) ** 0.5
+}
+
+// const testPoints = [
+// 	[
+// 		{
+// 			lng: 116.45,
+// 			lat: 39.941,
+// 		},
+// 		{
+// 			lng: 116.451,
+// 			lat: 39.94,
+// 		},
+// 		140.028516722523,
+// 	],
+// 	[
+// 		{
+// 			lng: 116.45,
+// 			lat: 39.96,
+// 		},
+// 		{
+// 			lng: 116.4,
+// 			lat: 39.94,
+// 		},
+// 		4804.42126283918,
+// 	],
+// 	[
+// 		{
+// 			lng: 116.45,
+// 			lat: 39.96,
+// 		},
+// 		{
+// 			lng: 117.3,
+// 			lat: 39.94,
+// 		},
+// 		72444.815518822,
+// 	],
+// 	[
+// 		{
+// 			lng: 115.25,
+// 			lat: 39.26,
+// 		},
+// 		{
+// 			lng: 117.3,
+// 			lat: 41.04,
+// 		},
+// 		263525.616783986,
+// 	],
+// 	[
+// 		{
+// 			lng: 1,
+// 			lat: 1,
+// 		},
+// 		{
+// 			lng: 2,
+// 			lat: 2,
+// 		},
+// 		157127,
+// 	],
+// ]
+// testPoints.forEach((pair) => {
+// 	console.log(distanceSimplify(pair[0], pair[1]) - pair[2])
+// })
+
 class MapManager {
 	constructor() {
 		this.mapInst = undefined
 		this.renderList = []
 		this.renderPoints = []
 		this.lastClickSidebarPointIndex = undefined
+		this.totalDistance = 0
 	}
 
 	async init(elementId) {
@@ -62,14 +138,21 @@ class MapManager {
 
 	setRenderList(list) {
 		this.renderList = list
-		this.renderPoints = []
-		for (let i = 0; i < this.renderList.length; i += 1) {
-			const point = getMapPoint(this.renderList[i])
+		this.renderPoints = this.renderList.map((value, index) => {
+			const point = getMapPoint(value)
 			if (point) {
-				point.index = i
-				this.renderPoints.push(point)
+				point.index = index
 			}
-		}
+			return point
+		})
+		this.totalDistance = this.renderPoints
+			.map((point, index) => {
+				if (index) {
+					return distanceSimplify(this.renderPoints[index - 1], point)
+				}
+				return 0
+			})
+			.reduce((prev, curr) => prev + curr, 0)
 
 		const options = {
 			size: BMAP_POINT_SIZE_BIGGER,
@@ -97,7 +180,10 @@ class MapManager {
 	async fetchGeoLocations() {
 		progressBar.showProgressBar()
 		progressBar.setProgress(0)
-		const setProgress = _.debounce(progressBar.setProgress, 250, { trailing: true, maxWait: 250 })
+		const setProgress = _.debounce(progressBar.setProgress, 250, {
+			trailing: true,
+			maxWait: 250,
+		})
 		for (let i = 0; i < this.renderPoints.length; i += 1) {
 			const p = this.renderPoints[i]
 			const address = await this.mapInst.getGeoLocation(p)

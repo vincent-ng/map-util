@@ -10,7 +10,6 @@ const loader = require('./loader')
 const file = require('./file')
 const mapManager = require('./map')
 
-
 $(async () => {
 	$('title').html('Map Util')
 	const app = $('#brickyard-app')
@@ -20,15 +19,19 @@ $(async () => {
 
 	file.init('fileComponent')
 	file.onRead = (sheets) => {
-		const list = _.concat(..._.values(sheets))
+		const list = _.concat(..._.values(sheets)) // array of every point
 		mapManager.resetSidebar()
 		mapManager.setRenderList(list)
-		$('#getGeoLocations').off('click').click(async () => {
-			mapManager.fetchGeoLocations()
-		})
-		$('#exportFile').off('click').click(() => {
-			file.exportFile(list, `locations${Date.now()}`)
-		})
+		$('#getGeoLocations')
+			.off('click')
+			.click(async () => {
+				mapManager.fetchGeoLocations()
+			})
+		$('#exportFile')
+			.off('click')
+			.click(() => {
+				file.exportFile(list, `locations${Date.now()}`)
+			})
 		$('#operations').show()
 	}
 })
