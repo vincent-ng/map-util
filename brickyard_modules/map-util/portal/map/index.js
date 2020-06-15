@@ -233,10 +233,12 @@ class MapManager {
 		const checkpoints = [Object.assign(firstPoint, firstAddress)]
 
 		for (let i = 0; i < this.renderPoints.length; i += 1) {
-			// for (let i = 0; i < 100; i += 1) {
 			const p = _.cloneDeep(this.renderPoints[i])
-			if (distanceSimplify(checkpoints[checkpoints.length - 1], p) > 1000) {
+			if (distanceSimplify(checkpoints[checkpoints.length - 1], p) > 5000) {
 				const address = await this.mapInst.getGeoLocation(p)
+				await new Promise((reslove) => {
+					setTimeout(reslove, 100)
+				})
 				checkpoints.push(Object.assign(p, address))
 
 				const data = this.renderList[p.index]
