@@ -121,6 +121,6 @@ module.exports.init = mapElementId => new Promise((resolve) => {
 		window.HOST_TYPE = '2'
 	}
 
-	const mapUrl = `//api.map.baidu.com/getscript?v=2.0&ak=IP0OO8wiWGlANXqlEoDOqwHW&services=&t=${Date.now()}`
+	const mapUrl = `//api.map.baidu.com/getscript?v=2.0&ak=RPz1yMKTHuKwUkGAndFKWhhchV87qsPC&services=&t=${Date.now()}`
 	$.getScript(mapUrl, () => resolve(initMap(mapElementId)))
 })
